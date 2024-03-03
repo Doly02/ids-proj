@@ -1,0 +1,74 @@
+<mxfile host="Electron" modified="2024-02-19T11:53:42.579Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.1.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="SHdBsyaWCQiOSBWzD8LD" version="23.1.5" type="device">
+  <diagram name="Page-1" id="Lak5Ugf9m3Jv_Q896Xjd">
+    <mxGraphModel dx="810" dy="526" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zgBpFFYHwaKxx0agg74d-5" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="zgBpFFYHwaKxx0agg74d-1" target="zgBpFFYHwaKxx0agg74d-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-7" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="zgBpFFYHwaKxx0agg74d-6" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="110" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-11" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="zgBpFFYHwaKxx0agg74d-1" target="zgBpFFYHwaKxx0agg74d-10" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-1" value="Zákonný zástupca" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="60" y="80" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-9" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="zgBpFFYHwaKxx0agg74d-2" target="zgBpFFYHwaKxx0agg74d-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-13" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="zgBpFFYHwaKxx0agg74d-2" target="zgBpFFYHwaKxx0agg74d-12" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8icaYZSILEnSpAPELPuf-4" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="zgBpFFYHwaKxx0agg74d-2" target="8icaYZSILEnSpAPELPuf-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-2" value="Pedagogický pracovník" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="65" y="380" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-3" value="vyjadriť súhlas" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="260" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-6" value="udeliť pokyn k vyzdvihnutiu" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="265" y="120" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-8" value="pridať dieťa" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="257.5" y="310" width="145" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-10" value="upraviť údaje o dieťati" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="260" y="200" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-12" value="priradiť dieťa do triedy" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="262.5" y="390" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="zgBpFFYHwaKxx0agg74d-14" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-19" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="zgBpFFYHwaKxx0agg74d-14" target="zgBpFFYHwaKxx0agg74d-18" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8icaYZSILEnSpAPELPuf-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="zgBpFFYHwaKxx0agg74d-14" target="8icaYZSILEnSpAPELPuf-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-14" value="Riaditeľ" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="65" y="670" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="zgBpFFYHwaKxx0agg74d-18" value="priradiť funkciu" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="275" y="675" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="8icaYZSILEnSpAPELPuf-1" value="upraviť funkciu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="275" y="760" width="145" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="8icaYZSILEnSpAPELPuf-3" value="vytvoriť aktivitu" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="266.25" y="480" width="137.5" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
