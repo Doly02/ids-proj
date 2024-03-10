@@ -106,7 +106,7 @@ CREATE TABLE "Dite-Trida" (
         FOREIGN KEY ("cislo_tridy")
         REFERENCES "Trida" ("cislo_tridy")
         ON DELETE SET NULL
-)
+);
 
 
 -- TODO skontrolovat DELETE casti
