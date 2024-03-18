@@ -13,22 +13,21 @@
 
 ----- mazani tabulek -----
 
---DROP TABLE "Osoba";
+DROP TABLE "Dite-Trida";
+DROP TABLE "Zastupce-Dite";
 
---DROP TABLE "Pedagogicky_pracovnik";
---DROP TABLE "Dite";
---DROP TABLE "Zakonny_zastupce";
+DROP TABLE "Pokyn_k_vyzvednuti";
+DROP TABLE "Souhlas";
 
---DROP TABLE "Trida";
---DROP TABLE "Funkce";
---DROP TABLE "Aktivita";
+DROP TABLE "Aktivita";
+DROP TABLE "Funkce";
+DROP TABLE "Trida";
 
---DROP TABLE "Pokyn_k_vyzvednuti";
---DROP TABLE "Souhlas";
+DROP TABLE "Pedagogicky_pracovnik";
+DROP TABLE "Dite";
+DROP TABLE "Zakonny_zastupce";
 
---DROP TABLE "Zastupce-Dite";
---DROP TABLE "Dite-Trida";
-
+DROP TABLE "Osoba";
 
 ----- vytvoreni tabulek -----
 
@@ -36,21 +35,14 @@
 CREATE TABLE "Osoba" (
     "rodne_cislo" VARCHAR2(10) NOT NULL PRIMARY KEY,
         CHECK(MOD(TO_NUMBER("rodne_cislo"), 11) = 0),
-
     "jmeno" VARCHAR2(50) NOT NULL,
     "prijmeni" VARCHAR2(50) NOT NULL,
     "datum_narozeni" DATE NOT NULL,
-    "pohlavi" VARCHAR2(10) CHECK ("pohlavi" IN ('muž', 'žena')),
+    "pohlavi" VARCHAR2(10)
+        CHECK ("pohlavi" IN ('muž', 'žena')),
     "adresa_bydliste" VARCHAR2(100) NOT NULL,
     "telefonni_cislo" VARCHAR2(20),
-	"e-mail" VARCHAR2(100) NOT NULL
-		CHECK(REGEXP_LIKE(
-		    "e-mail", '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', 'i'
-        )),
-
-
-    CONSTRAINT kontakt_neprazdny
-        CHECK ("telefonni_cislo" IS NOT NULL OR "e-mail" IS NOT NULL)
+	"e-mail" VARCHAR2(100)
 );
 
 
@@ -142,7 +134,7 @@ CREATE TABLE "Pokyn_k_vyzvednuti" (
         PRIMARY KEY ("cislo_pokynu", "rc_zastupce"),
 
     "zacatek_platnosti" DATE NOT NULL,        -- TODO opravit v ERD
-    "konec_platnosti" DATE NOT NULL ,
+    "konec_platnosti" DATE,
 
     -- Pokyn k vyzvednuti udeluje dany zakonny zastupce
     CONSTRAINT "Pokyn_Zastupce_FK"
@@ -175,7 +167,7 @@ CREATE TABLE "Souhlas" (
         PRIMARY KEY ("cislo_souhlasu", "rc_zastupce"),
 
     "zacatek_platnosti" DATE NOT NULL,  -- TODO opravit v ERD
-    "konec_platnosti" DATE NOT NULL,
+                                        -- TODO odstranit koniec platnosti pri suhlase v ERD
 
     -- Souhlas s danou aktivitou
     CONSTRAINT "Souhlas_Aktivita_FK"
@@ -242,106 +234,211 @@ CREATE TABLE "Dite-Trida" (
 
 
 ----- naplneni tabulek ukazkovymi daty -----
------------ DITE ---------------------------
+
+----------- OSOBA ---------------------------
 INSERT INTO "Osoba" (
     "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
-    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
+    "pohlavi", "adresa_bydliste"
 ) VALUES (
-    '8106026883',           -- Rodne cislo
+    '1901010056',           -- Rodne cislo
     'Adam',                 -- Jmeno
     'Petrik',             -- Prijmeni
-    DATE '2007-03-11',      -- Datum narozeni
+    DATE '2019-01-01',      -- Datum narozeni
     'muž',                 -- Pohlavi
-    'Husitska 202/47, Brno',   -- Adresa bydlište
-    '-',            -- Tel. cislo
-    '-'   -- E-mail
-);
-
-INSERT INTO "Dite" (
-    "rodne_cislo_ditete", "datum_nastupu"
-) VALUES (
-    '8106026883',       -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
-    DATE '2022-09-01'
+    'Husitska 202/47, Brno'   -- Adresa bydlište
 );
 
 INSERT INTO "Osoba" (
-    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
-    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni", "pohlavi", "adresa_bydliste"
 ) VALUES (
-    '7905017894',           -- Rodne cislo
-    'Anna',                 -- Jmeno
-    'Vlnena',             -- Prijmeni
-    DATE '2008-02-27',      -- Datum narozeni
-    'žena',                 -- Pohlavi
-    'Vlnena 124/47 10a, Brno',   -- Adresa bydlište
-    '-',            -- Tel. cislo
-    '-'   -- E-mail
-);
-
-INSERT INTO "Dite" (
-    "rodne_cislo_ditete", "datum_nastupu", "datum_ukonceni"
-) VALUES (
-    '8106026883',       -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
-    DATE '2019-09-01',
-    DATE '2023-05-01'
-);
-
-INSERT INTO "Osoba" (
-    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni", "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
-) VALUES (
-    '1005051234',
+    '2005050003',
     'Jakub',
     'Vlneny',
-    DATE '2010-05-05',
+    DATE '2020-05-05',
     'muž',
-    'Vlnena 124/47 10a, Brno',
-    '-',
-    '-'
+    'Vlnena 124/47 10a, Brno'
 );
 
------------ ZAKONNY ZASTUPCE ---------------
+INSERT INTO "Osoba" (
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
+    "pohlavi", "adresa_bydliste"
+) VALUES (
+    '2062060000',           -- Rodne cislo
+    'Michaela Erika',         -- Jmeno
+    'Svobodova',             -- Prijmeni
+    DATE '2020-12-06',      -- Datum narozeni
+    'žena',                 -- Pohlavi
+    'Videnska 273/64 Brno'   -- Adresa bydlište
+);
+
 INSERT INTO "Osoba" (
     "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
     "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
 ) VALUES (
-    '8451286208',           -- Rodne cislo
+    '8451280002',           -- Rodne cislo
     'Katerina',                 -- Jmeno
     'Vlnena',             -- Prijmeni
-    DATE '1982-05-12',      -- Datum narozeni
+    DATE '1984-01-28',      -- Datum narozeni
     'žena',                 -- Pohlavi
     'Vlnena 124/47 10a, Brno',   -- Adresa bydlište
     '774776753',            -- Tel. cislo
     'katerina.vlnena@gmail.com'   -- E-mail
 );
 
-INSERT INTO "Zakonny_zastupce" (
-    "rodne_cislo_zastupce"
+INSERT INTO "Osoba" (
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
+    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
 ) VALUES (
-    '8451286208'       -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
+    '8007180005',
+    'Petr',
+    'Vlneny',
+    DATE '1980-07-18',
+    'muž',
+    'Vlnena 124/47 10a, Brno',
+    '777556009',
+    'vlnka123@gmail.com'
 );
 
 INSERT INTO "Osoba" (
     "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
     "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
 ) VALUES (
-    '8401286208',           -- Rodne cislo
-    'Petr',                 -- Jmeno
-    'Vlneny',             -- Prijmeni
-    DATE '1980-07-18',      -- Datum narozeni
+    '8153120008',
+    'Jana',
+    'Petrikova',
+    DATE '1981-03-12',
+    'žena',
+    'Husitska 202/47, Brno',
+    '773522019',
+    'janapetrik6@zoznam.cz'
+);
+
+INSERT INTO "Osoba" (
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
+    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
+) VALUES (
+    '8857070002',
+    'Andrea',
+    'Svobodova',
+    DATE '1988-07-07',
+    'žena',
+    'Videnska 273/64 Brno',
+    '792111003',
+    'svobodova452@zoznam.cz'
+);
+
+INSERT INTO "Osoba" (
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
+    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
+) VALUES (
+    '8957020006',           -- Rodne cislo
+    'Martina',                 -- Jmeno
+    'Sedlackova',             -- Prijmeni
+    DATE '1989-07-02',      -- Datum narozeni
+    'žena',                 -- Pohlavi
+    'Riegrova 1, Brno-Kralovo Pole',   -- Adresa bydlište
+    '776914753',            -- Tel. cislo
+    'martinka61@yahoo.com'   -- E-mail
+);
+
+INSERT INTO "Osoba" (
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
+    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
+) VALUES (
+    '8005020001',           -- Rodne cislo
+    'Milan',                 -- Jmeno
+    'Varga',                -- Prijmeni
+    DATE '1980-05-02',      -- Datum narozeni
     'muž',                 -- Pohlavi
-    'Vlnena 124/47 10a, Brno',   -- Adresa bydlište
-    '777556009',            -- Tel. cislo
-    'vlnka123@gmail.com'   -- E-mail
+    'Palackeho trida 460/2, Brno',   -- Adresa bydlište
+    '770034413',            -- Tel. cislo
+    'varga222@yahoo.com'   -- E-mail
+);
+
+INSERT INTO "Osoba" (
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
+    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
+) VALUES (
+    '8757280004',           -- Rodne cislo
+    'Anna',                 -- Jmeno
+    'Sedlackova',             -- Prijmeni
+    DATE '1987-07-28',      -- Datum narozeni
+    'žena',                 -- Pohlavi
+    'Riegrova 1, Brno-Kralovo Pole',   -- Adresa bydlište
+    '733123785',            -- Tel. cislo
+    'sedlackova.anna@gmail.com'   -- E-mail
+);
+
+INSERT INTO "Osoba" (
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
+    "pohlavi", "adresa_bydliste", "telefonni_cislo"
+) VALUES (
+    '5559030004',           -- Rodne cislo
+    'Hana',                -- Jmeno
+    'Vlnena',             -- Prijmeni
+    DATE '1955-09-03',      -- Datum narozeni
+    'žena',                 -- Pohlavi
+    'Videnska 200/2 Brno',   -- Adresa bydlište
+    '792945128'              -- Telefonni cislo
+);
+
+----------- DITE ---------------------------------
+
+INSERT INTO "Dite" (
+    "rodne_cislo_ditete", "datum_nastupu"
+) VALUES (
+    -- Adam Petrik
+    '1901010056',       -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
+    DATE '2022-09-01'
+);
+
+INSERT INTO "Dite" (
+    "rodne_cislo_ditete", "datum_nastupu"
+) VALUES (
+    -- Jakub Vlneny
+    '2005050003',
+    DATE '2023-09-01'
+);
+
+INSERT INTO "Dite" (
+    "rodne_cislo_ditete", "datum_nastupu"
+) VALUES (
+    -- Michaela Erika Svobodova
+    '2062060000',
+    DATE '2023-09-01'
+);
+
+----------- ZAKONNY ZASTUPCE ---------------
+
+INSERT INTO "Zakonny_zastupce" (
+    "rodne_cislo_zastupce"
+) VALUES (
+    -- Katerina Vlnena
+    '8451280002'       -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
+);
+
+INSERT INTO "Zakonny_zastupce" (
+    "rodne_cislo_zastupce"
+) VALUES (
+    -- Petr Vlneny
+    '8007180005'       -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
+);
+
+INSERT INTO "Zakonny_zastupce" (
+    "rodne_cislo_zastupce"
+) VALUES (
+    -- Jana Petrikova
+    '8153120008'
+);
+
+INSERT INTO "Zakonny_zastupce" (
+    "rodne_cislo_zastupce"
+) VALUES (
+    -- Andrea Svobodova
+    '8857070002'
 );
 
 ----------- TRIDA --------------------------
-INSERT INTO "Trida" (
-    "oznaceni","kmenova_ucebna"
-) VALUES (
-    'Berusky',
-    'B112'
-);
-
 INSERT INTO "Trida" (
     "oznaceni","kmenova_ucebna"
 ) VALUES (
@@ -355,122 +452,110 @@ INSERT INTO "Trida" (
     'Komari',
     'C099'
 );
+
 ----------- ZASTUPCE DITE -----------------
 INSERT INTO "Zastupce-Dite" (
     "rc_zastupce", "rc_ditete"
 ) VALUES (
-    '8451286208', -- Katerina Vlnena
-    '7905017894'  -- Anna Vlnena
+    '8153120008', -- Jana Petrikova
+    '1901010056'  -- Adam Petrik
 );
 
 INSERT INTO "Zastupce-Dite" (
     "rc_zastupce", "rc_ditete"
 ) VALUES (
-    '8401286208', -- Petr Vlneny
-    '7905017894'  -- Anna Vlnena
+    '8857070002', -- Andrea Svobodova
+    '2062060000'  -- Michaela Erika Svobodova
 );
 
 INSERT INTO "Zastupce-Dite" (
     "rc_zastupce", "rc_ditete"
 ) VALUES (
-    '8451286208',   -- Jakub Vlneny
-    '1005051234'    -- Katerina Vlnena
+    '8451280002', -- Katerina Vlnena
+    '2005050003'  -- Jakub Vlneny
 );
 
 INSERT INTO "Zastupce-Dite" (
     "rc_zastupce", "rc_ditete"
 ) VALUES (
-    '8401286208',   -- Jakub Vlneny
-    '1005051234'    -- Petr Vlneny
+    '8007180005', -- Petr Vlneny
+    '2005050003'  -- Jakub Vlneny
 );
 
 ----------- DITE-TRIDA ----------------------
 INSERT INTO "Dite-Trida" (
     "rc_ditete", "c_tridy"
 ) VALUES (
-    '7905017894',  -- Anna Vlnena
-    (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Berusky') -- Lepe to dosadit nejde kdyz nezname cislo tridy
-);
-
-INSERT INTO "Dite-Trida" (
-    "rc_ditete", "c_tridy"
-) VALUES (
-    '8106026883',  -- Adam Petrik
+    '1901010056', -- Adam Petrik
     (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Kvetinky') -- Lepe to dosadit nejde kdyz nezname cislo tridy
 );
 
 INSERT INTO "Dite-Trida" (
     "rc_ditete", "c_tridy"
 ) VALUES (
-    '8451286208',  -- Jakub Vlneny
+    '2062060000', -- Michaela Erika Svobodova
     (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Komari') -- Lepe to dosadit nejde kdyz nezname cislo tridy
 );
+
+INSERT INTO "Dite-Trida" (
+    "rc_ditete", "c_tridy"
+) VALUES (
+    '2005050003', -- Jakub Vlneny
+    (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Kvetinky') -- Lepe to dosadit nejde kdyz nezname cislo tridy
+);
+
 ----------- PEDAGOGICKY PRACOVNIK ----------
-INSERT INTO "Osoba" (
-    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
-    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
+
+INSERT INTO "Pedagogicky_pracovnik" (
+    "rodne_cislo_pracovnika"
 ) VALUES (
-    '1234567890',           -- Rodne cislo
-    'Jan',                  -- Jmeno
-    'Novák',                -- Prijmeni
-    DATE '1999-05-04',      -- Datum narozeni
-    'muž',                  -- Pohlavi
-    'Ulice 123, Město',     -- Adresa bydlište
-    '123456789',            -- Tel. cislo
-    'jan.novak@email.cz'    -- E-mail
+    -- Martina Sedlackova
+    '8957020006' -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
 );
 
 INSERT INTO "Pedagogicky_pracovnik" (
     "rodne_cislo_pracovnika"
 ) VALUES (
-    '1234567890' -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
-);
-
-INSERT INTO "Osoba" (
-    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
-    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
-) VALUES (
-    '8451286219',           -- Rodne cislo
-    'Jana',                 -- Jmeno
-    'Novakova',             -- Prijmeni
-    DATE '1989-07-02',      -- Datum narozeni
-    'žena',                 -- Pohlavi
-    'Semilaso 475, Brno',   -- Adresa bydlište
-    '776914753',            -- Tel. cislo
-    'janicka69@yahoo.com'   -- E-mail
+    -- Milan Varga
+    '8005020001' -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
 );
 
 INSERT INTO "Pedagogicky_pracovnik" (
     "rodne_cislo_pracovnika"
 ) VALUES (
-    '8451286219' -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
+    -- Anna Sedlackova
+    '8757280004' -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
 );
 
 ----------- FUNKCE -------------------------
 INSERT INTO "Funkce" (
     "c_tridy", "rc_pracovnika", "název", "datum_zacatku"
 ) VALUES (
-    (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Berusky'),
-    '1234567890',       -- Jan Novak
-    'ucitel',
-    DATE '2023-09-01'
+    (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Kvetinky'),
+    '8957020006', -- Martina Sedlackova
+    'tridny ucitel',
+    DATE '2022-09-01'
 );
 
 INSERT INTO "Funkce" (
     "c_tridy", "rc_pracovnika", "název", "datum_zacatku"
 ) VALUES (
-    (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Kvetinky'),
-    '8451286219',       -- Jana Novakova
-    'ucitel',
-    DATE '2022-09-01'
+    (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Komari'),
+    '8005020001', -- Milan Varga
+    'tridny ucitel',
+    DATE '2021-09-01'
+);
+
+INSERT INTO "Funkce" (
+    "c_tridy", "rc_pracovnika", "název", "datum_zacatku"
+) VALUES (
+    (SELECT "cislo_tridy" FROM "Trida" WHERE "oznaceni" = 'Komari'),
+    '8757280004', -- Anna Sedlackova
+    'lektorka anglictiny',
+    DATE '2023-09-01'
 );
 
 ----------- AKTIVITA -----------------------
-INSERT INTO "Aktivita" (
-    "typ_aktivity", "nazev_aktivity"
-) VALUES (
-    'Skolni vylet', 'Brnenska prehrada'
-);
 
 INSERT INTO "Aktivita" (
     "typ_aktivity", "nazev_aktivity"
@@ -478,23 +563,59 @@ INSERT INTO "Aktivita" (
     'Sport', 'Sportovni den'
 );
 
------------ SOUHLAS ------------------------
-INSERT INTO "Souhlas" (
-    "rc_ditete", "rc_zastupce", "c_aktivity", "zacatek_platnosti", "konec_platnosti"
+INSERT INTO "Aktivita" (
+    "typ_aktivity", "nazev_aktivity"
 ) VALUES (
-    '7905017894',  -- Anna Vlnena
-    '8401286208',  -- Petr Vlneny
+    'Besidka', 'Vanocni besidka'
+);
+
+
+----------- SOUHLAS ------------------------
+
+INSERT INTO "Souhlas" (
+    "rc_ditete", "rc_zastupce", "c_aktivity", "zacatek_platnosti"
+) VALUES (
+    '2005050003',  -- Jakub Vlneny
+    '8007180005',  -- Petr Vlneny
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Sportovni den'),
-    DATE '2023-09-01',
-    DATE '2023-09-30'   --TODO Podle me bychom tu nemeli davat konec platnosti -> Nema to smysl :D
+    DATE '2023-09-01'
 );
 
 INSERT INTO "Souhlas" (
-    "rc_ditete", "rc_zastupce", "c_aktivity", "zacatek_platnosti", "konec_platnosti"
+    "rc_ditete", "rc_zastupce", "c_aktivity", "zacatek_platnosti"
 ) VALUES (
-    '8451286208',  -- Anna Vlnena
-    '8451286208',  -- Katerina Vlneny
-    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Brnenska prehrada'),
-    DATE '2023-09-03',
-    DATE '2023-11-04'
+    '1901010056',  -- Adam Petrik
+    '8153120008',  -- Jana Petrikova
+    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Sportovni den'),
+    DATE '2023-04-04'
+);
+
+INSERT INTO "Souhlas" (
+    "rc_ditete", "rc_zastupce", "c_aktivity", "zacatek_platnosti"
+) VALUES (
+    '2062060000',  -- Michaela Erika Svobodova
+    '8857070002',  -- Andrea Svobodova
+    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Vanocni besidka'),
+    DATE '2023-04-04'
+);
+
+
+----------- POKYN K VYZVEDNUTI ------------------------
+
+INSERT INTO "Pokyn_k_vyzvednuti" (
+    "rc_osoby", "rc_zastupce", "rc_ditete", "zacatek_platnosti"
+) VALUES (
+    '8153120008', -- Jana Petrikova
+    '8857070002', -- Andrea Svobodova
+    '2062060000', -- Michaela Erika Svobodova
+    DATE '2023-10-30'
+);
+
+INSERT INTO "Pokyn_k_vyzvednuti" (
+    "rc_osoby", "rc_zastupce", "rc_ditete", "zacatek_platnosti"
+) VALUES (
+    '5559030004', -- Hana Vlnena
+    '8451280002',  -- Katerina Vlnena
+    '2005050003',  -- Jakub Vlneny
+    DATE '2023-10-30'
 );
