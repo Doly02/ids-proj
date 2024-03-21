@@ -767,7 +767,7 @@ INSERT INTO "Souhlas" (
 ) VALUES (
     '2005050003',  -- Jakub Vlneny
     '8007180005',  -- Petr Vlneny
-    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Zoo Brno'),
+    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'ZOO Brno'),
     DATE '2023-09-01'
 );
 
@@ -776,7 +776,7 @@ INSERT INTO "Souhlas" (
 ) VALUES (
     '2005050003',  -- Jakub Vlneny
     '8007180005',  -- Petr Vlneny
-    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'PLavecky kurz'),
+    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Plavecky kurz'),
     DATE '2023-09-01'
 );
 
@@ -804,7 +804,7 @@ INSERT INTO "Souhlas" (
     '2062060000',  -- Michaela Erika Svobodova
     '8857070002',  -- Andrea Svobodova
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Vanocni besidka'),
-    DATE '2023-04-04'
+    DATE '2023-09-01'
 );
 
 INSERT INTO "Souhlas" (
@@ -813,7 +813,7 @@ INSERT INTO "Souhlas" (
     '2062060000',  -- Michaela Erika Svobodova
     '8857070002',  -- Andrea Svobodova
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Plavecky kurz'),
-    DATE '2023-04-04'
+    DATE '2023-09-01'
 );
 
 INSERT INTO "Souhlas" (
@@ -822,7 +822,7 @@ INSERT INTO "Souhlas" (
     '2110110002',  -- Vojtech Labuda
     '7505220008',  -- Jan Labuda
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Sportovni den'),
-    DATE '2023-04-04'
+    DATE '2023-09-01'
 );
 
 INSERT INTO "Souhlas" (
@@ -831,7 +831,7 @@ INSERT INTO "Souhlas" (
     '2110110002',  -- Vojtech Labuda
     '7505220008',  -- Jan Labuda
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Vanocni besidka'),
-    DATE '2023-04-04'
+    DATE '2023-09-01'
 );
 
 
