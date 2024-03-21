@@ -34,7 +34,14 @@ DROP TABLE "Osoba";
 
 CREATE TABLE "Osoba" (
     "rodne_cislo" VARCHAR2(10) NOT NULL PRIMARY KEY,
-        CHECK(MOD(TO_NUMBER("rodne_cislo"), 11) = 0),
+        CHECK (
+        LENGTH("rodne_cislo") = 10 AND
+        MOD(TO_NUMBER("rodne_cislo"), 11) = 0 AND
+        (
+            ("pohlavi" = 'muž' AND REGEXP_LIKE("rodne_cislo", '^\d{2}(0[1-9]|1[0-2])\d{6}$')) OR
+            ("pohlavi" = 'žena' AND REGEXP_LIKE("rodne_cislo", '^\d{2}(5[1-9]|6[0-2])\d{6}$'))
+        )
+    ),
     "jmeno" VARCHAR2(50) NOT NULL,
     "prijmeni" VARCHAR2(50) NOT NULL,
     "datum_narozeni" DATE NOT NULL,
