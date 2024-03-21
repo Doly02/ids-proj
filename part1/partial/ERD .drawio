@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2024-02-21T15:57:02.773Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.1.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="uJvBRfnxROCKbaoP4dH8" version="23.1.5" type="device">
+<mxfile host="Electron" modified="2024-03-21T11:12:18.672Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.0.4 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="WhpyzF6AdmVPjwkR4xEb" version="24.0.4" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="1485" dy="619" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="810" dy="526" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -55,10 +55,10 @@
             <mxPoint x="-28" y="-450" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="E8d0nW5CMPHc4IN3NaXr-82" value="Dátum_udelenia" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="E8d0nW5CMPHc4IN3NaXr-80" vertex="1">
+        <mxCell id="E8d0nW5CMPHc4IN3NaXr-82" value="Začiatok_platnosti" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="E8d0nW5CMPHc4IN3NaXr-80" vertex="1">
           <mxGeometry y="60" width="166" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="E8d0nW5CMPHc4IN3NaXr-83" value="Dátum_ukončenia_platnosti" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="E8d0nW5CMPHc4IN3NaXr-80" vertex="1">
+        <mxCell id="E8d0nW5CMPHc4IN3NaXr-83" value="Koniec_platnosti" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="E8d0nW5CMPHc4IN3NaXr-80" vertex="1">
           <mxGeometry y="80" width="166" height="20" as="geometry" />
         </mxCell>
         <mxCell id="E8d0nW5CMPHc4IN3NaXr-87" value="Osoba" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
@@ -136,16 +136,13 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="E8d0nW5CMPHc4IN3NaXr-42" value="&amp;lt;&amp;lt;weak&amp;gt;&amp;gt;&lt;br&gt;Súhlas" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="300" y="620" width="166" height="100" as="geometry" />
+          <mxGeometry x="300" y="620" width="166" height="80" as="geometry" />
         </mxCell>
         <mxCell id="E8d0nW5CMPHc4IN3NaXr-43" value="&amp;lt;&amp;lt;D&amp;gt;&amp;gt; Číslo_súhlasu" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="E8d0nW5CMPHc4IN3NaXr-42" vertex="1">
           <mxGeometry y="40" width="166" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="E8d0nW5CMPHc4IN3NaXr-44" value="Dátum_udelenia" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="E8d0nW5CMPHc4IN3NaXr-42" vertex="1">
+        <mxCell id="E8d0nW5CMPHc4IN3NaXr-44" value="Začiatok_platnosti" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="E8d0nW5CMPHc4IN3NaXr-42" vertex="1">
           <mxGeometry y="60" width="166" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="E8d0nW5CMPHc4IN3NaXr-45" value="Dátum_ukončenia_platnosti" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="E8d0nW5CMPHc4IN3NaXr-42" vertex="1">
-          <mxGeometry y="80" width="166" height="20" as="geometry" />
         </mxCell>
         <mxCell id="7yrtn3zr0TZFfLM9wy2p-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="E8d0nW5CMPHc4IN3NaXr-53" target="E8d0nW5CMPHc4IN3NaXr-58" edge="1">
           <mxGeometry relative="1" as="geometry">
