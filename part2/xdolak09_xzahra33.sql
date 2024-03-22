@@ -32,8 +32,8 @@ DROP TABLE "Osoba";
 ----- vytvoreni tabulek -----
 
 
-CREATE TABLE "Osoba" (
-    "rodne_cislo" VARCHAR2(10) NOT NULL PRIMARY KEY,
+    CREATE TABLE "Osoba" (
+        "rodne_cislo" VARCHAR2(10) NOT NULL PRIMARY KEY,
         CHECK (
         LENGTH("rodne_cislo") = 10 AND
         MOD(TO_NUMBER("rodne_cislo"), 11) = 0 AND
@@ -98,7 +98,7 @@ CREATE TABLE "Trida" (
 
 
 CREATE TABLE "Funkce" (
-    "cislo_funkce" INT GENERATED AS IDENTITY PRIMARY KEY,
+    "cislo_funkce" INT GENERATED AS IDENTITY NOT NULL PRIMARY KEY,
 
     "c_tridy" INT NOT NULL,
     "rc_pracovnika" VARCHAR2(10) NOT NULL,
