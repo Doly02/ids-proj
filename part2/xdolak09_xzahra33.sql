@@ -1,4 +1,4 @@
--- 2. část - SQL skript pro vytvoření objektů schématu databáze
+-- 3. část - SQL skript pro vytvoření objektů schématu databáze a s příklady na dotazy SELECT
 -- Téma Školka
 -- Autor: Tomáš Dolák (xdolak09)
 -- Autor: Monika Záhradníková (xzahra33)
@@ -32,16 +32,9 @@ DROP TABLE "Osoba";
 ----- vytvoreni tabulek -----
 
 
-    CREATE TABLE "Osoba" (
-        "rodne_cislo" VARCHAR2(10) NOT NULL PRIMARY KEY,
-        CHECK (
-        LENGTH("rodne_cislo") = 10 AND
-        MOD(TO_NUMBER("rodne_cislo"), 11) = 0 AND
-        (
-            ("pohlavi" = 'muž' AND REGEXP_LIKE("rodne_cislo", '^\d{2}(0[1-9]|1[0-2])\d{6}$')) OR
-            ("pohlavi" = 'žena' AND REGEXP_LIKE("rodne_cislo", '^\d{2}(5[1-9]|6[0-2])\d{6}$'))
-        )
-    ),
+CREATE TABLE "Osoba" (
+    "rodne_cislo" VARCHAR2(10) NOT NULL PRIMARY KEY,
+        CHECK(MOD(TO_NUMBER("rodne_cislo"), 11) = 0),
     "jmeno" VARCHAR2(50) NOT NULL,
     "prijmeni" VARCHAR2(50) NOT NULL,
     "datum_narozeni" DATE NOT NULL,
@@ -98,7 +91,7 @@ CREATE TABLE "Trida" (
 
 
 CREATE TABLE "Funkce" (
-    "cislo_funkce" INT GENERATED AS IDENTITY NOT NULL PRIMARY KEY,
+    "cislo_funkce" INT GENERATED AS IDENTITY PRIMARY KEY,
 
     "c_tridy" INT NOT NULL,
     "rc_pracovnika" VARCHAR2(10) NOT NULL,
@@ -774,7 +767,7 @@ INSERT INTO "Souhlas" (
 ) VALUES (
     '2005050003',  -- Jakub Vlneny
     '8007180005',  -- Petr Vlneny
-    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'ZOO Brno'),
+    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Zoo Brno'),
     DATE '2023-09-01'
 );
 
@@ -783,7 +776,7 @@ INSERT INTO "Souhlas" (
 ) VALUES (
     '2005050003',  -- Jakub Vlneny
     '8007180005',  -- Petr Vlneny
-    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Plavecky kurz'),
+    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'PLavecky kurz'),
     DATE '2023-09-01'
 );
 
@@ -811,7 +804,7 @@ INSERT INTO "Souhlas" (
     '2062060000',  -- Michaela Erika Svobodova
     '8857070002',  -- Andrea Svobodova
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Vanocni besidka'),
-    DATE '2023-09-01'
+    DATE '2023-04-04'
 );
 
 INSERT INTO "Souhlas" (
@@ -820,7 +813,7 @@ INSERT INTO "Souhlas" (
     '2062060000',  -- Michaela Erika Svobodova
     '8857070002',  -- Andrea Svobodova
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Plavecky kurz'),
-    DATE '2023-09-01'
+    DATE '2023-04-04'
 );
 
 INSERT INTO "Souhlas" (
@@ -829,7 +822,7 @@ INSERT INTO "Souhlas" (
     '2110110002',  -- Vojtech Labuda
     '7505220008',  -- Jan Labuda
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Sportovni den'),
-    DATE '2023-09-01'
+    DATE '2023-04-04'
 );
 
 INSERT INTO "Souhlas" (
@@ -838,7 +831,7 @@ INSERT INTO "Souhlas" (
     '2110110002',  -- Vojtech Labuda
     '7505220008',  -- Jan Labuda
     (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Vanocni besidka'),
-    DATE '2023-09-01'
+    DATE '2023-04-04'
 );
 
 
@@ -872,9 +865,19 @@ INSERT INTO "Pokyn_k_vyzvednuti" (
 );
 
 
--- Prikaz 1.
+-- 1. dotaz (spojení dvou tabulek):
+-- Vypíše telefonní čísla zákonných zástupců.
+SELECT "jmeno", "prijmeni", "telefonni_cislo"
+    FROM "Osoba" O JOIN "Zakonny_zastupce" Zz ON O."rodne_cislo" = Zz."rodne_cislo_zastupce";
+
+-- 2. dotaz (spojení dvou tabulek):
+-- Vypíše počet chlapců ve školce.
+SELECT COUNT(*) pocet
+    FROM "Osoba" O JOIN "Dite" D ON O."rodne_cislo" = D."rodne_cislo_ditete"
+        WHERE O."pohlavi" = 'muž';
+
+-- 3. dotaz - Spojeni trech tabulek (Osoba,Funkce,Trida)
 -- Popis: Zobrazi jednotlive pedagogicke pracovniky a funkce ktere zastavaji ve tridach
--- Spojeni trech tabulek (Osoba,Funkce,Trida)
 SELECT
     O."jmeno",
     O."prijmeni",
@@ -891,4 +894,30 @@ JOIN
 JOIN
     "Trida" T ON F."c_tridy" = T."cislo_tridy";
 
+-- 4. dotaz - dotaz s klauzuli GROUP BY a agregacni funkci
+-- Popis: Spocita pocet zakonnych zastupcu v jednotlivych vekovych kategorii (napr. 1970-1979,1980-1989)
+SELECT
+    TRUNC(EXTRACT(YEAR FROM "datum_narozeni") / 10) * 10 || 's' AS vekova_kategorie,
+    COUNT(*) AS pocet_zastupcu
+FROM
+    "Osoba" O
+JOIN
+    "Zakonny_zastupce" ZZ ON O."rodne_cislo" = ZZ."rodne_cislo_zastupce"
+GROUP BY
+    TRUNC(EXTRACT(YEAR FROM "datum_narozeni") / 10) * 10
+ORDER BY
+    vekova_kategorie;
 
+-- 5.  dotaz - dotaz s predikatem IN a s vnorenym SELECTem
+-- Popis: Ktere tridy neobsahuji zadne deti?
+SELECT
+    T."oznaceni" AS "trida"
+FROM
+    "Trida" T
+WHERE
+    T."cislo_tridy" NOT IN (
+        SELECT DISTINCT DT."c_tridy"
+        FROM "Dite-Trida" DT
+    )
+ORDER BY
+    "trida";
