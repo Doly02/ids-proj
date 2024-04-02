@@ -870,8 +870,17 @@ SELECT "jmeno", "prijmeni", "telefonni_cislo"
     FROM "Osoba" O JOIN "Zakonny_zastupce" Zz ON O."rodne_cislo" = Zz."rodne_cislo_zastupce";
 
 -- 2. dotaz (spojení dvou tabulek):
--- Vypíše počet chlapců ve školce.
-SELECT COUNT(*) pocet
+-- Vypíše jména a příjmení chlapců ve školce.
+SELECT "jmeno", "prijmeni"
     FROM "Osoba" O JOIN "Dite" D ON O."rodne_cislo" = D."rodne_cislo_ditete"
         WHERE O."pohlavi" = 'muž';
+
+-- 4.dotaz (s klauzulí GROUP BY a agregační funkcí):
+-- Vypíše počet detí v každé tříde.
+SELECT "c_tridy", COUNT(*) AS "pocet_deti"
+    FROM "Dite-Trida"
+        GROUP BY "c_tridy"
+            ORDER BY "c_tridy";
+
+
 
