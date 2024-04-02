@@ -910,10 +910,11 @@ ORDER BY
 
 -- 5.dotaz (s klauzulí GROUP BY a agregační funkcí):
 -- Vypíše počet detí v každé tříde.
-SELECT "nazev_tridy", COUNT(*) AS "pocet_deti"
-    FROM "Dite-Trida"
-        GROUP BY "c_tridy"
-            ORDER BY "c_tridy";
+SELECT "oznaceni", COUNT(*) AS "pocet_deti"
+    FROM "Dite-Trida" JOIN "Trida" T on "Dite-Trida"."c_tridy" = T."cislo_tridy"
+        GROUP BY "oznaceni"
+            ORDER BY "oznaceni";
+
 
 -- 6.  dotaz - dotaz s predikatem IN a s vnorenym SELECTem
 -- Popis: Ktere tridy neobsahuji zadne deti?
