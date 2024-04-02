@@ -1,4 +1,4 @@
--- 2. část - SQL skript pro vytvoření objektů schématu databáze
+-- 3. část - SQL skript pro vytvoření objektů schématu databáze a s příklady na dotazy SELECT
 -- Téma Školka
 -- Autor: Tomáš Dolák (xdolak09)
 -- Autor: Monika Záhradníková (xzahra33)
@@ -863,3 +863,15 @@ INSERT INTO "Pokyn_k_vyzvednuti" (
     '2005050003',  -- Jakub Vlneny
     DATE '2023-09-10'
 );
+
+-- 1. dotaz (spojení dvou tabulek):
+-- Vypíše telefonní čísla zákonných zástupců.
+SELECT "jmeno", "prijmeni", "telefonni_cislo"
+    FROM "Osoba" O JOIN "Zakonny_zastupce" Zz ON O."rodne_cislo" = Zz."rodne_cislo_zastupce";
+
+-- 2. dotaz (spojení dvou tabulek):
+-- Vypíše počet chlapců ve školce.
+SELECT COUNT(*) pocet
+    FROM "Osoba" O JOIN "Dite" D ON O."rodne_cislo" = D."rodne_cislo_ditete"
+        WHERE O."pohlavi" = 'muž';
+
