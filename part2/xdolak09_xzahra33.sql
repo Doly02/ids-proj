@@ -870,3 +870,25 @@ INSERT INTO "Pokyn_k_vyzvednuti" (
     '2005050003',  -- Jakub Vlneny
     DATE '2023-09-10'
 );
+
+
+-- Prikaz 1.
+-- Popis: Zobrazi jednotlive pedagogicke pracovniky a funkce ktere zastavaji ve tridach
+-- Spojeni trech tabulek (Osoba,Funkce,Trida)
+SELECT
+    O."jmeno",
+    O."prijmeni",
+    F."název" AS funkce,
+    F."datum_zacatku",
+    F."datum_ukonceni",
+    T."oznaceni" AS nazev_tridy
+FROM
+    "Pedagogicky_pracovnik" PP
+JOIN
+    "Osoba" O ON PP."rodne_cislo_pracovnika" = O."rodne_cislo"
+JOIN
+    "Funkce" F ON PP."rodne_cislo_pracovnika" = F."rc_pracovnika"
+JOIN
+    "Trida" T ON F."c_tridy" = T."cislo_tridy";
+
+
