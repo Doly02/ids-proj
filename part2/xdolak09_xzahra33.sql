@@ -537,6 +537,12 @@ INSERT INTO "Trida" (
     'C099'
 );
 
+INSERT INTO "Trida" (
+    "oznaceni","kmenova_ucebna"
+) VALUES (
+    'Jesterky',
+    'C091'
+);
 ----------- ZASTUPCE DITE -----------------
 INSERT INTO "Zastupce-Dite" (
     "rc_zastupce", "rc_ditete"
@@ -909,7 +915,7 @@ JOIN
 
 
 -- 4. dotaz - Dotaz s klauzuli GROUP BY a agregacni funkci
--- Popis: Spocita pocet zakonnych zastupcu v jednotlivych vekovych kategorii (napr. 1970-1979,1980-1989).
+-- Popis: Spočítá počet zákonnných zástupců v jednotlivých věkových kategoriích (napr. 1970-1979,1980-1989).
 SELECT
     TRUNC(EXTRACT(YEAR FROM "datum_narozeni") / 10) * 10 || 's' AS vekova_kategorie,
     COUNT(*) AS pocet_zastupcu
@@ -924,7 +930,7 @@ ORDER BY
 
 
 -- 5. dotaz - Dotaz s klauzuli GROUP BY a agregacni funkci
--- Popis: Vypíše počet detí v každé tříde.
+-- Popis: Vypíše počet detí v každé neprázdné třídě.
 SELECT
     "oznaceni", COUNT(*) AS "pocet_deti"
 FROM
