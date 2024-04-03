@@ -894,6 +894,7 @@ JOIN
 JOIN
     "Trida" T ON F."c_tridy" = T."cislo_tridy";
 
+
 -- 4. dotaz - dotaz s klauzuli GROUP BY a agregacni funkci
 -- Popis: Spocita pocet zakonnych zastupcu v jednotlivych vekovych kategorii (napr. 1970-1979,1980-1989)
 SELECT
@@ -908,6 +909,7 @@ GROUP BY
 ORDER BY
     vekova_kategorie;
 
+
 -- 5.dotaz (s klauzulí GROUP BY a agregační funkcí):
 -- Vypíše počet detí v každé tříde.
 SELECT "oznaceni", COUNT(*) AS "pocet_deti"
@@ -916,7 +918,7 @@ SELECT "oznaceni", COUNT(*) AS "pocet_deti"
             ORDER BY "oznaceni";
 
 
--- 6.  dotaz - dotaz s predikatem IN a s vnorenym SELECTem
+-- 6. dotaz - dotaz s predikatem IN a s vnorenym SELECTem
 -- Popis: Ktere tridy neobsahuji zadne deti?
 SELECT
     T."oznaceni" AS "trida"
@@ -929,3 +931,16 @@ WHERE
     )
 ORDER BY
     "trida";
+
+-- 7. dotaz
+--
+SELECT o."jmeno", o."prijmeni", d."rodne_cislo_ditete"
+FROM "Osoba" o
+JOIN "Dite" d ON o."rodne_cislo" = d."rodne_cislo_ditete"
+WHERE EXISTS (
+    SELECT 1
+    FROM "Souhlas" s
+    JOIN "Aktivita" a ON s."c_aktivity" = a."cislo_aktivity"
+    WHERE s."rc_ditete" = d."rodne_cislo_ditete"
+    AND a."nazev_aktivity" = 'plavecký kurz'
+);
