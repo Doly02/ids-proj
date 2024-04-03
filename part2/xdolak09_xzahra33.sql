@@ -767,7 +767,7 @@ INSERT INTO "Souhlas" (
 ) VALUES (
     '2005050003',  -- Jakub Vlneny
     '8007180005',  -- Petr Vlneny
-    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Zoo Brno'),
+    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'ZOO Brno'),
     DATE '2023-09-01'
 );
 
@@ -776,7 +776,7 @@ INSERT INTO "Souhlas" (
 ) VALUES (
     '2005050003',  -- Jakub Vlneny
     '8007180005',  -- Petr Vlneny
-    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'PLavecky kurz'),
+    (SELECT "cislo_aktivity" FROM "Aktivita" WHERE "nazev_aktivity" = 'Plavecky kurz'),
     DATE '2023-09-01'
 );
 
@@ -865,19 +865,32 @@ INSERT INTO "Pokyn_k_vyzvednuti" (
 );
 
 
--- 1. dotaz (spojení dvou tabulek):
--- Vypíše telefonní čísla zákonných zástupců.
-SELECT "jmeno", "prijmeni", "telefonni_cislo"
-    FROM "Osoba" O JOIN "Zakonny_zastupce" Zz ON O."rodne_cislo" = Zz."rodne_cislo_zastupce";
+-------------- DOTAZY SELECT -------------------
 
--- 2. dotaz (spojení dvou tabulek):
--- Vypíše jména a příjmení chlapců ve školce.
-SELECT "jmeno", "prijmeni"
-    FROM "Osoba" O JOIN "Dite" D ON O."rodne_cislo" = D."rodne_cislo_ditete"
-        WHERE O."pohlavi" = 'muž';
+-- 1. dotaz - Spojení dvou tabulek (Osoba, Zákonný zástupce)
+-- Popis: Vypíše telefonní čísla zákonných zástupců.
+SELECT
+    "jmeno", "prijmeni", "telefonni_cislo"
+FROM
+    "Osoba" O
+JOIN
+    "Zakonny_zastupce" Zz ON O."rodne_cislo" = Zz."rodne_cislo_zastupce";
 
--- 3. dotaz - Spojeni trech tabulek (Osoba,Funkce,Trida)
--- Popis: Zobrazi jednotlive pedagogicke pracovniky a funkce ktere zastavaji ve tridach
+
+-- 2. dotaz - Spojení dvou tabulek (Osoba, Dite)
+-- Popis: Vypíše jména a příjmení chlapců ve školce.
+SELECT
+    "jmeno", "prijmeni"
+FROM
+    "Osoba" O
+JOIN
+    "Dite" D ON O."rodne_cislo" = D."rodne_cislo_ditete"
+WHERE
+    O."pohlavi" = 'muž';
+
+
+-- 3. dotaz - Spojeni trech tabulek (Osoba, Funkce, Trida)
+-- Popis: Zobrazí jednotlivé pedagogické pracovníky a funkce, které zastávají ve třídach.
 SELECT
     O."jmeno",
     O."prijmeni",
@@ -895,8 +908,8 @@ JOIN
     "Trida" T ON F."c_tridy" = T."cislo_tridy";
 
 
--- 4. dotaz - dotaz s klauzuli GROUP BY a agregacni funkci
--- Popis: Spocita pocet zakonnych zastupcu v jednotlivych vekovych kategorii (napr. 1970-1979,1980-1989)
+-- 4. dotaz - Dotaz s klauzuli GROUP BY a agregacni funkci
+-- Popis: Spocita pocet zakonnych zastupcu v jednotlivych vekovych kategorii (napr. 1970-1979,1980-1989).
 SELECT
     TRUNC(EXTRACT(YEAR FROM "datum_narozeni") / 10) * 10 || 's' AS vekova_kategorie,
     COUNT(*) AS pocet_zastupcu
@@ -910,15 +923,42 @@ ORDER BY
     vekova_kategorie;
 
 
--- 5.dotaz (s klauzulí GROUP BY a agregační funkcí):
--- Vypíše počet detí v každé tříde.
-SELECT "oznaceni", COUNT(*) AS "pocet_deti"
-    FROM "Dite-Trida" JOIN "Trida" T on "Dite-Trida"."c_tridy" = T."cislo_tridy"
-        GROUP BY "oznaceni"
-            ORDER BY "oznaceni";
+-- 5. dotaz - Dotaz s klauzuli GROUP BY a agregacni funkci
+-- Popis: Vypíše počet detí v každé tříde.
+SELECT
+    "oznaceni", COUNT(*) AS "pocet_deti"
+FROM
+    "Dite-Trida"
+JOIN
+    "Trida" T on "Dite-Trida"."c_tridy" = T."cislo_tridy"
+GROUP BY
+    "oznaceni"
+ORDER BY
+    "pocet_deti";
 
 
--- 6. dotaz - dotaz s predikatem IN a s vnorenym SELECTem
+-- 6. dotaz - dotaz s predikatem EXISTS
+-- Popis: Vypíše deti, které mají souhlas s aktivitou Plavecký kurz.
+SELECT
+    O."jmeno", O."prijmeni", D."rodne_cislo_ditete"
+FROM
+    "Osoba" O
+JOIN
+    "Dite" D ON O."rodne_cislo" = D."rodne_cislo_ditete"
+WHERE EXISTS (
+    SELECT 1
+    FROM
+        "Souhlas" S
+    JOIN
+        "Aktivita" A ON S."c_aktivity" = A."cislo_aktivity"
+    WHERE
+        S."rc_ditete" = D."rodne_cislo_ditete"
+    AND
+        A."nazev_aktivity" = 'Plavecky kurz'
+);
+
+
+-- 7. dotaz - dotaz s predikatem IN a s vnorenym SELECTem
 -- Popis: Ktere tridy neobsahuji zadne deti?
 SELECT
     T."oznaceni" AS "trida"
@@ -931,16 +971,3 @@ WHERE
     )
 ORDER BY
     "trida";
-
--- 7. dotaz
---
-SELECT o."jmeno", o."prijmeni", d."rodne_cislo_ditete"
-FROM "Osoba" o
-JOIN "Dite" d ON o."rodne_cislo" = d."rodne_cislo_ditete"
-WHERE EXISTS (
-    SELECT 1
-    FROM "Souhlas" s
-    JOIN "Aktivita" a ON s."c_aktivity" = a."cislo_aktivity"
-    WHERE s."rc_ditete" = d."rodne_cislo_ditete"
-    AND a."nazev_aktivity" = 'plavecký kurz'
-);
