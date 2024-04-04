@@ -894,24 +894,22 @@ JOIN
 WHERE
     O."pohlavi" = 'muž';
 
-
--- 3. dotaz - Spojeni trech tabulek (Osoba, Funkce, Trida)
--- Popis: Zobrazí jednotlivé pedagogické pracovníky a funkce, které zastávají ve třídach.
+-- 3. dotaz - Spojeni trech tabulek (Pokyn k vyzvednuti, Dite, Dite-Osoba)
+--Popis: Zobrazi cela jmena dite, u kterych existuje alespon jedno povoleni k vyzvednuti a zaroven cela jmena
+--       osob ktere dane dite mohou vyzvednout
 SELECT
-    O."jmeno",
-    O."prijmeni",
-    F."název" AS funkce,
-    F."datum_zacatku",
-    F."datum_ukonceni",
-    T."oznaceni" AS nazev_tridy
+    DiteOsoba."jmeno" AS "Jmeno_ditete",
+    DiteOsoba."prijmeni" AS "Prijmeni_ditete",
+    OsobaSpovolenimKvyzvednuti."jmeno" AS "Jmeno_osoby_s_povolenim_k_vyzvednuti",
+    OsobaSpovolenimKvyzvednuti."prijmeni" AS "Prijmeni_osoby_s_povolenim_k_vyzvednuti"
 FROM
-    "Pedagogicky_pracovnik" PP
+    "Pokyn_k_vyzvednuti"
 JOIN
-    "Osoba" O ON PP."rodne_cislo_pracovnika" = O."rodne_cislo"
+    "Osoba" OsobaSpovolenimKvyzvednuti ON "Pokyn_k_vyzvednuti"."rc_osoby" = OsobaSpovolenimKvyzvednuti."rodne_cislo"
 JOIN
-    "Funkce" F ON PP."rodne_cislo_pracovnika" = F."rc_pracovnika"
-JOIN
-    "Trida" T ON F."c_tridy" = T."cislo_tridy";
+    "Osoba" DiteOsoba ON "Pokyn_k_vyzvednuti"."rc_ditete" = DiteOsoba."rodne_cislo"
+ORDER BY
+    "Jmeno_ditete", "Prijmeni_ditete", "Jmeno_osoby_s_povolenim_k_vyzvednuti", "Prijmeni_osoby_s_povolenim_k_vyzvednuti";
 
 
 -- 4. dotaz - Dotaz s klauzuli GROUP BY a agregacni funkci
@@ -977,3 +975,23 @@ WHERE
     )
 ORDER BY
     "trida";
+
+
+-- dotaz navic - Spojeni ctyrech tabulek (Osoba, Pedagogicky pracovnik, Funkce, Trida)
+-- Popis: Zobrazí jednotlivé pedagogické pracovníky a funkce, které zastávají ve třídach.
+SELECT
+    O."jmeno",
+    O."prijmeni",
+    F."název" AS funkce,
+    F."datum_zacatku",
+    F."datum_ukonceni",
+    T."oznaceni" AS nazev_tridy
+FROM
+    "Pedagogicky_pracovnik" PP
+JOIN
+    "Osoba" O ON PP."rodne_cislo_pracovnika" = O."rodne_cislo"
+JOIN
+    "Funkce" F ON PP."rodne_cislo_pracovnika" = F."rc_pracovnika"
+JOIN
+    "Trida" T ON F."c_tridy" = T."cislo_tridy";
+
