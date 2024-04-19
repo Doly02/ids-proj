@@ -1,0 +1,30 @@
+CREATE OR REPLACE TRIGGER Check_Dite_Vek: 
+Tento příkaz vytváří nový trigger nebo nahrazuje existující trigger s názvem Check_Dite_Vek.
+ 
+Použití CREATE OR REPLACE umožňuje aktualizovat trigger bez potřeby jeho manuálního odstranění a znovu vytvoření.
+
+
+BEFORE INSERT ON "Dite": 
+Tento trigger je aktivován před operací INSERT na tabulce "Dite".
+ 
+To znamená, že trigger bude spuštěn před každým pokusem o vložení nového záznamu do tabulky "Dite".
+
+
+FOR EACH ROW: Specifikuje, že trigger bude vykonán pro každý řádek, který je vložen do tabulky.
+ To znamená, že operace v triggeru se aplikují na každé jednotlivé dítě, které se má zapsat, a ne na celou skupinu záznamů najednou.
+
+DECLARE vek NUMBER;: Tato část deklaruje proměnnou vek typu NUMBER, která bude použita k uchování vypočítaného věku dítěte.
+
+SELECT EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM o.
+"datum_narozeni") INTO vek: Tento SQL dotaz slouží k výpočtu věku dítěte.
+ Využívá funkci EXTRACT, která získá rok z aktuálního data (SYSDATE) a rok z data narození dítěte.
+ Rozdíl těchto dvou hodnot je uložen do proměnné vek.
+
+FROM "Osoba" o WHERE o."rodne_cislo" = :NEW."rodne_cislo_ditete":
+Dotaz získává datum_narozeni z tabulky "Osoba",
+kde rodne_cislo odpovídá rodne_cislo_ditete nově vkládaného záznamu (:NEW."rodne_cislo_ditete").:NEW je pseudorekord, který odkazuje na nové hodnoty sloupců, které jsou vkládány do tabulky.
+
+IF vek < 3 OR vek > 6 THEN: Tato podmínka testuje, zda je věk dítěte mimo povolený rozsah (3 až 6 let).
+ Pokud ano, trigger vyvolá chybu.RAISE_APPLICATION_ERROR(-20001, 'Dítě musí být ve věku 3 až 6 let pro nástup do školky.
+');: Pokud podmínka není splněna, trigger vyvolá aplikovanou chybu s kódem -20001 a zprávou, že dítě musí být ve věku 3 až 6 let pro nástup do školky.
+ Tato chyba zastaví operaci INSERT a zabrání zapsání dítěte, které nemá správný věk.

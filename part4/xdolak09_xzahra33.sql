@@ -232,6 +232,43 @@ CREATE TABLE "Dite-Trida" (
 );
 
 
+----- netriviální triggery -----
+
+-- Kontroluje, zda deti mají věk mezi 3 až 6 let při nástupu do školky
+
+CREATE OR REPLACE TRIGGER Check_Dite_Vek
+BEFORE INSERT ON "Dite"
+FOR EACH ROW
+DECLARE
+    vek NUMBER;
+BEGIN
+    SELECT EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM o."datum_narozeni") INTO vek
+    FROM "Osoba" o
+    WHERE o."rodne_cislo" = :NEW."rodne_cislo_ditete";
+
+    IF vek < 3 OR vek > 6 THEN
+        RAISE_APPLICATION_ERROR(-2069, 'Dítě musí být ve věku 3 až 6 let pro nástup do školky.');
+    END IF;
+END;
+
+-- Kontroluje, zda třída neobsahuje víc než 15 detí.
+
+CREATE OR REPLACE TRIGGER Limit_Children_In_Class
+BEFORE INSERT ON "Dite-Trida"
+FOR EACH ROW
+DECLARE
+    child_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO child_count
+    FROM "Dite-Trida"
+    WHERE "c_tridy" = :NEW."c_tridy";
+
+    IF child_count >= 15 THEN
+        RAISE_APPLICATION_ERROR(-2070, 'Třída již má maximální počet dětí (15). Nemůžete přidat další dítě.');
+    END IF;
+END;
+
 ----- naplneni tabulek ukazkovymi daty -----
 
 ----------- OSOBA ---------------------------
@@ -245,6 +282,42 @@ INSERT INTO "Osoba" (
     DATE '2019-01-01',      -- Datum narozeni
     'muž',                 -- Pohlavi
     'Husitska 202/47, Brno'   -- Adresa bydlište
+);
+
+INSERT INTO "Dite" (
+    "rodne_cislo_ditete", "datum_nastupu"
+) VALUES (
+    -- Adam Petrik
+    '1901010056',       -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
+    DATE '2022-09-01'
+);
+
+INSERT INTO "Osoba" (
+    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
+    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
+) VALUES (
+    '8153120008',
+    'Jana',
+    'Petrikova',
+    DATE '1981-03-12',
+    'žena',
+    'Husitska 202/47, Brno',
+    '773522019',
+    'janapetrik6@zoznam.cz'
+);
+
+INSERT INTO "Zakonny_zastupce" (
+    "rodne_cislo_zastupce"
+) VALUES (
+    -- Jana Petrikova
+    '8153120008'
+);
+
+INSERT INTO "Zastupce-Dite" (
+    "rc_zastupce", "rc_ditete"
+) VALUES (
+    '8153120008', -- Jana Petrikova
+    '1901010056'  -- Adam Petrik
 );
 
 INSERT INTO "Osoba" (
@@ -322,20 +395,6 @@ INSERT INTO "Osoba" (
     'Vlnena 124/47 10a, Brno',
     '777556009',
     'vlnka123@gmail.com'
-);
-
-INSERT INTO "Osoba" (
-    "rodne_cislo", "jmeno", "prijmeni", "datum_narozeni",
-    "pohlavi", "adresa_bydliste", "telefonni_cislo", "e-mail"
-) VALUES (
-    '8153120008',
-    'Jana',
-    'Petrikova',
-    DATE '1981-03-12',
-    'žena',
-    'Husitska 202/47, Brno',
-    '773522019',
-    'janapetrik6@zoznam.cz'
 );
 
 INSERT INTO "Osoba" (
@@ -438,13 +497,7 @@ INSERT INTO "Osoba" (
 
 ----------- DITE ---------------------------------
 
-INSERT INTO "Dite" (
-    "rodne_cislo_ditete", "datum_nastupu"
-) VALUES (
-    -- Adam Petrik
-    '1901010056',       -- Rodne cislo -> Musi odpovidat hodnote v 'Osoba'
-    DATE '2022-09-01'
-);
+
 
 INSERT INTO "Dite" (
     "rodne_cislo_ditete", "datum_nastupu"
@@ -494,12 +547,7 @@ INSERT INTO "Zakonny_zastupce" (
     '8007180005'
 );
 
-INSERT INTO "Zakonny_zastupce" (
-    "rodne_cislo_zastupce"
-) VALUES (
-    -- Jana Petrikova
-    '8153120008'
-);
+
 
 INSERT INTO "Zakonny_zastupce" (
     "rodne_cislo_zastupce"
@@ -538,12 +586,7 @@ INSERT INTO "Trida" (
 );
 
 ----------- ZASTUPCE DITE -----------------
-INSERT INTO "Zastupce-Dite" (
-    "rc_zastupce", "rc_ditete"
-) VALUES (
-    '8153120008', -- Jana Petrikova
-    '1901010056'  -- Adam Petrik
-);
+
 
 INSERT INTO "Zastupce-Dite" (
     "rc_zastupce", "rc_ditete"
@@ -864,20 +907,8 @@ INSERT INTO "Pokyn_k_vyzvednuti" (
     DATE '2023-09-10'
 );
 
+----- Explained plan ------
 
-CREATE OR REPLACE TRIGGER Check_Dite_Vek
-BEFORE INSERT ON "Dite"
-FOR EACH ROW
-DECLARE
-    vek NUMBER;
-BEGIN
-    -- Získání věku z datumu narození, který je uložen v tabulce Osoba
-    SELECT EXTRACT(YEAR FROM SYSDATE) - EXTRACT(YEAR FROM o."datum_narozeni") INTO vek
-    FROM "Osoba" o
-    WHERE o."rodne_cislo" = :NEW.rodne_cislo_ditete;
 
-    IF vek < 3 OR vek > 6 THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Dítě musí být ve věku 3 až 6 let pro nástup do školky.');
-    END IF;
-END;
 
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
