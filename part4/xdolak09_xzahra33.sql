@@ -29,6 +29,8 @@ DROP TABLE "Zakonny_zastupce";
 
 DROP TABLE "Osoba";
 
+DROP MATERIALIZED VIEW "zastupce_dite_count";
+
 ----- vytvoreni tabulek -----
 
 
@@ -937,3 +939,43 @@ GROUP BY o."rodne_cislo", o."prijmeni"
 HAVING COUNT(p."cislo_pokynu") > 0
 ORDER BY o."prijmeni";
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
+
+
+----- Materialized View -----
+CREATE MATERIALIZED VIEW "zastupce_dite_count" AS
+SELECT
+    z."rodne_cislo_zastupce" AS "zastupce_id",
+    o."jmeno" AS "first_name",
+    o."prijmeni" AS "last_name",
+    COUNT(d."rc_ditete") AS "children_count"
+FROM "Zakonny_zastupce" z
+JOIN "Osoba" o ON z."rodne_cislo_zastupce" = o."rodne_cislo"
+LEFT JOIN "Zastupce-Dite" d ON z."rodne_cislo_zastupce" = d."rc_zastupce"
+GROUP BY z."rodne_cislo_zastupce", o."jmeno", o."prijmeni";
+
+SELECT * FROM "zastupce_dite_count";
+
+-- Aktualizace dat, uprave existujicich udaju v tabulce
+-- RC zastupce bude upraveno hodnotou z novy_rc_zastupce
+-- WHERE klauzule zde omezuje radky ktere budou zmeneny
+UPDATE "Zastupce-Dite" SET "rc_zastupce" = 'nove_rc_zastupce' WHERE "rc_ditete" = 'exist_rc_ditete';
+
+-- Kontrola pohledu po aktualizaci
+SELECT * FROM "zastupce_dite_count";
+
+
+----- privelegia ------
+GRANT ALL ON "Osoba" TO xzahra33;
+GRANT ALL ON "Pedagogicky_pracovnik" TO xzahra33;
+GRANT ALL ON "Dite" TO xzahra33;
+GRANT ALL ON "Zakonny_zastupce" TO xzahra33;
+GRANT ALL ON "Trida" TO xzahra33;
+GRANT ALL ON "Funkce" TO xzahra33;
+GRANT ALL ON "Aktivita" TO xzahra33;
+GRANT ALL ON "Pokyn_k_vyzvednuti" TO xzahra33;
+GRANT ALL ON "Souhlas" TO xzahra33;
+GRANT ALL ON "Zastupce-Dite" TO xzahra33;
+GRANT ALL ON "Dite-Trida" TO xzahra33;
+
+-- Prava pro materialovy pohled
+GRANT ALL ON "zastupce_dite_count" TO xzahra33;
