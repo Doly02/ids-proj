@@ -908,7 +908,32 @@ INSERT INTO "Pokyn_k_vyzvednuti" (
 );
 
 ----- Explained plan ------
+-- DOTAZ: Ktere deti se prijmenim Vlneny/Vlnena maji alespon jedno povoleni k vyzvednuti a kolik jich maji?
+EXPLAIN PLAN FOR
+SELECT
+    o."prijmeni" AS "prijmeni",
+    COUNT(p."cislo_pokynu") AS "pocet_povoleni"
+FROM "Dite" d
+JOIN "Osoba" o ON d."rodne_cislo_ditete" = o."rodne_cislo"
+JOIN "Pokyn_k_vyzvednuti" p ON d."rodne_cislo_ditete" = p."rc_ditete"
+WHERE o."prijmeni" LIKE 'Vlnen%'            -- Filter pro prijmeni na vyhledani "vlneny/a"
+GROUP BY o."rodne_cislo", o."prijmeni"      -- Seskupeni podle rodneho cisla a prijmeni
+HAVING COUNT(p."cislo_pokynu") > 0          -- Alespon jedno povoleni
+ORDER BY o."prijmeni";                      -- Razeni podle prijmeni
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
+-- Vytvoreni indexu
+CREATE INDEX "idx_osoba_prijmeni" ON "Osoba" ("prijmeni");
 
-
+EXPLAIN PLAN FOR
+SELECT
+    o."prijmeni" AS "prijmeni",
+    COUNT(p."cislo_pokynu") AS "pocet_povoleni"
+FROM "Dite" d
+JOIN "Osoba" o ON d."rodne_cislo_ditete" = o."rodne_cislo"
+JOIN "Pokyn_k_vyzvednuti" p ON d."rodne_cislo_ditete" = p."rc_ditete"
+WHERE o."prijmeni" LIKE 'Vlnen%'
+GROUP BY o."rodne_cislo", o."prijmeni"
+HAVING COUNT(p."cislo_pokynu") > 0
+ORDER BY o."prijmeni";
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
