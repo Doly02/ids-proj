@@ -979,3 +979,72 @@ GRANT ALL ON "Dite-Trida" TO xzahra33;
 
 -- Prava pro materialovy pohled
 GRANT ALL ON "zastupce_dite_count" TO xzahra33;
+
+
+------- netriviální procedúry -------
+-- 1. procedúra, která aktualizuje telefónni číslo osoby, jestli existuje v databáze
+CREATE OR REPLACE PROCEDURE Aktualizuj_telefonne_cislo_osoby (param_rodne_cislo IN "Osoba"."rodne_cislo"%TYPE, param_nove_tel_cislo IN "Osoba"."telefonni_cislo"%TYPE) AS
+BEGIN
+    UPDATE "Osoba"
+    SET "telefonni_cislo" = param_nove_tel_cislo
+    WHERE "rodne_cislo" = param_rodne_cislo;
+
+    -- Kontrola, zda byl aktualizován nějaký řádek
+    IF SQL%ROWCOUNT = 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Nenašla se osoba s daným rodným číslem.');
+    END IF;
+
+    -- Potvrzení změn v databázi
+    COMMIT;
+EXCEPTION
+    -- -- Zpracování chyby, která nastane při vykonávání procedury
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Chyba: ' || SQLERRM);
+        ROLLBACK;
+END;
+
+-- Volání
+BEGIN
+    --Hana Vlnena
+    Aktualizuj_telefonne_cislo_osoby('5559030004', '792555555');
+END;
+
+
+-- 2. procedúra, která vymaže všechny souhlasy spojené s danou aktivitou
+CREATE OR REPLACE PROCEDURE Vymaz_souhlasy_pro_aktivitu(param_nazev_aktivity VARCHAR2) IS
+  -- Definice kurzoru
+    CURSOR s_cursor IS
+    SELECT "cislo_aktivity"
+    FROM "Aktivita"
+    WHERE "nazev_aktivity" = param_nazev_aktivity;
+
+  -- Deklerace promenne pro uchovavani dat ziskanych kurzorem
+  c_aktivity_tab s_cursor%ROWTYPE;
+BEGIN
+  OPEN s_cursor;
+
+  -- projiti vsech radku kurzorem
+  LOOP
+    -- nacteni radku do promenne
+    FETCH s_cursor INTO c_aktivity_tab;
+    -- ukonceni smycky, kdyz jsou vsechny radky spracovane
+    EXIT WHEN s_cursor%NOTFOUND;
+
+    -- vymazani souhlasu
+    DELETE FROM "Souhlas"
+    WHERE "c_aktivity" = c_aktivity_tab."cislo_aktivity";
+  END LOOP;
+
+  CLOSE s_cursor;
+  -- potvrzeni smen v databaze
+  COMMIT;
+END;
+
+
+-- Volání
+BEGIN
+  Vymaz_souhlasy_pro_aktivitu('Sportovni den');
+END;
+
+
+
