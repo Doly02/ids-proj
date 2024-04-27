@@ -934,14 +934,16 @@ SELECT
 FROM "Dite" d
 JOIN "Osoba" o ON d."rodne_cislo_ditete" = o."rodne_cislo"
 JOIN "Pokyn_k_vyzvednuti" p ON d."rodne_cislo_ditete" = p."rc_ditete"
-WHERE o."prijmeni" LIKE 'Vlnen%'
-GROUP BY o."rodne_cislo", o."prijmeni"
-HAVING COUNT(p."cislo_pokynu") > 0
-ORDER BY o."prijmeni";
-SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
+WHERE o."prijmeni" LIKE 'Vlnen%'                    -- Filter na prijmeni (vyhledani) "vlneny/a"
+GROUP BY o."rodne_cislo", o."prijmeni"              -- Seskupeni podle rod. cisla a prijmeni
+HAVING COUNT(p."cislo_pokynu") > 0                  -- alespon jedno povoleni
+ORDER BY o."prijmeni";                              -- serazeni podle prijmeni
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);            -- zobrazeni vystupu funkce DBMS_XPLAIN.DISPLAY
 
 
 ----- Materialized View -----
+-- pohled na vsechny zastupce na zastupce a deti ktere zastupuji
+-- umoznuje zjistit kolik ma dane dite zastupcu
 CREATE MATERIALIZED VIEW "zastupce_dite_count" AS
 SELECT
     z."rodne_cislo_zastupce" AS "zastupce_id",
@@ -953,6 +955,7 @@ JOIN "Osoba" o ON z."rodne_cislo_zastupce" = o."rodne_cislo"
 LEFT JOIN "Zastupce-Dite" d ON z."rodne_cislo_zastupce" = d."rc_zastupce"
 GROUP BY z."rodne_cislo_zastupce", o."jmeno", o."prijmeni";
 
+-- Pohled pred aktualizaci (MATVIEW)
 SELECT * FROM "zastupce_dite_count";
 
 -- Aktualizace dat, uprave existujicich udaju v tabulce
@@ -962,24 +965,6 @@ UPDATE "Zastupce-Dite" SET "rc_zastupce" = 'nove_rc_zastupce' WHERE "rc_ditete" 
 
 -- Kontrola pohledu po aktualizaci
 SELECT * FROM "zastupce_dite_count";
-
-
------ privelegia ------
-GRANT ALL ON "Osoba" TO xzahra33;
-GRANT ALL ON "Pedagogicky_pracovnik" TO xzahra33;
-GRANT ALL ON "Dite" TO xzahra33;
-GRANT ALL ON "Zakonny_zastupce" TO xzahra33;
-GRANT ALL ON "Trida" TO xzahra33;
-GRANT ALL ON "Funkce" TO xzahra33;
-GRANT ALL ON "Aktivita" TO xzahra33;
-GRANT ALL ON "Pokyn_k_vyzvednuti" TO xzahra33;
-GRANT ALL ON "Souhlas" TO xzahra33;
-GRANT ALL ON "Zastupce-Dite" TO xzahra33;
-GRANT ALL ON "Dite-Trida" TO xzahra33;
-
--- Prava pro materialovy pohled
-GRANT ALL ON "zastupce_dite_count" TO xzahra33;
-
 
 ------- netriviální procedúry -------
 -- 1. procedúra, která aktualizuje telefónni číslo osoby, jestli existuje v databáze
@@ -1010,7 +995,7 @@ BEGIN
 END;
 
 
--- 2. procedúra, která vymaže všechny souhlasy spojené s danou aktivitou
+-- 2. procedůra, která vymaže všechny souhlasy spojené s danou aktivitou
 CREATE OR REPLACE PROCEDURE Vymaz_souhlasy_pro_aktivitu(param_nazev_aktivity VARCHAR2) IS
   -- Definice kurzoru
     CURSOR s_cursor IS
@@ -1047,4 +1032,23 @@ BEGIN
 END;
 
 
+----- privelegia ------
+-- prava na tabulky (select, insert, update,delete, index,referece, triggery,alter)
+GRANT ALL ON "Osoba" TO XZAHRA33;
+GRANT ALL ON "Pedagogicky_pracovnik" TO XZAHRA33;
+GRANT ALL ON "Dite" TO XZAHRA33;
+GRANT ALL ON "Zakonny_zastupce" TO XZAHRA33;
+GRANT ALL ON "Trida" TO XZAHRA33;
+GRANT ALL ON "Funkce" TO XZAHRA33;
+GRANT ALL ON "Aktivita" TO XZAHRA33;
+GRANT ALL ON "Pokyn_k_vyzvednuti" TO XZAHRA33;
+GRANT ALL ON "Souhlas" TO XZAHRA33;
+GRANT ALL ON "Zastupce-Dite" TO XZAHRA33;
+GRANT ALL ON "Dite-Trida" TO XZAHRA33;
+
+-- prava pro procedury
+GRANT EXECUTE ON Aktualizuj_telefonne_cislo_osoby TO XZAHRA33;
+GRANT EXECUTE ON Vymaz_souhlasy_pro_aktivitu TO XZAHRA33;
+-- Prava pro materialovy pohled
+GRANT ALL ON "zastupce_dite_count" TO XZAHRA33;
 
